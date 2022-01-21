@@ -109,15 +109,16 @@ def main(user, password, database_name):
             #przeszukujemy baze danych gdzie wystepuje polskie slowk0 (mozna zrobic to troche inaczej)
                 check_Doc = db.collection(database_name).where(
                 u"WordPLN", u"==", PL).stream()
+                for doc in check_Doc:
+                    eng_odp = doc.get('WordENG')
+                    print(PL, "=>", eng_odp)
+                    flag = True
             except NoSuchElementException:
                 driver.get("https://lingos.pl/students/learning/")
      
 
             #pobieramy angieslkie slowko
-            for doc in check_Doc:
-                eng_odp = doc.get('WordENG')
-                print(PL, "=>", eng_odp)
-                flag = True
+            
             #jezeli pobralismy angielskie slowko program moze przystapic do dzialania
             if flag == True:
                 sleep(1)
@@ -165,12 +166,14 @@ def main(user, password, database_name):
 
                 except NoSuchElementException:
                     driver.get("https://lingos.pl/students/learning/")
-
+        driver.get("https://lingos.pl/students/learning/")
+    
     for i in range(100):
         lesson()
     driver.close()
 
 #Zawodowy angielski
+main("klosowskimikolaj159","Marycha3","Words_Zaw")
 
-main("Hubert Kinstler", "Hubert123", "Words_Zaw")
-# main("mikolajklosowski112@gmail.com", "Marycha3", "Words_Pod")
+#podstawowy angielski
+# main("mikolajklosowski112@gmail.com","Marycha3","Words_Pod") 
