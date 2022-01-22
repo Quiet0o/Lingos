@@ -70,7 +70,7 @@ def main(user, password, database_name):
     #opcje dla przegladark
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument("--mute-audio")
-    # chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--headless")
     chrome_options.add_argument('log-level=3')
     #automatyczny silnik przegladarki
     driver = webdriver.Chrome(
@@ -83,8 +83,7 @@ def main(user, password, database_name):
         By.CSS_SELECTOR, 'input[type="password"]').send_keys(password)
     element = driver.find_element(
         By.CSS_SELECTOR, 'button.btn.btn-primary.btn-lg.w-100')
-    webdriver.ActionChains(driver).move_to_element(
-        element).click(element).perform()
+    driver.execute_script("arguments[0].click();", element)
 
     #funkcja glowna ktora robi lekcje
     def lesson():
@@ -173,7 +172,7 @@ def main(user, password, database_name):
     driver.close()
 
 #Zawodowy angielski
-main("klosowskimikolaj159","Marycha3","Words_Zaw")
+# main("klosowskimikolaj159","Marycha3","Words_Zaw")
 
 #podstawowy angielski
-# main("mikolajklosowski112@gmail.com","Marycha3","Words_Pod") 
+main("mikolajklosowski112@gmail.com","Marycha3","Words_Pod") 
