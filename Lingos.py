@@ -97,6 +97,7 @@ def main(user, password, database_name):
             next = True
             print(next)
             driver.quit()
+            quit()
            
 
         #jezeli nie odpalamy bota ktory zapisuje slowka ddo bazy danych
@@ -172,7 +173,7 @@ def main(user, password, database_name):
     driver.close()
 
 #Zawodowy angielski
-# main("klosowskimikolaj159","Marycha3","Words_Zaw")
+main("klosowskimikolaj159","Marycha3","Words_Zaw")
 
 #podstawowy angielski
-main("mikolajklosowski112@gmail.com","Marycha3","Words_Pod") 
+# main("mikolajklosowski112@gmail.com","Marycha3","Words_Pod") 
