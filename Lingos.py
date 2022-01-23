@@ -57,9 +57,7 @@ default_app = firebase_admin.initialize_app(credential)
 next = False
 english_words = ""
 
-
 def main(user, password, database_name):
-
     db = firestore.client()
     documents = db.collection(database_name).stream()
     counter = 0
@@ -87,6 +85,7 @@ def main(user, password, database_name):
 
     #funkcja glowna ktora robi lekcje
     def lesson():
+      
         flag = False
         driver.get("https://lingos.pl/students/learning/")
         #sprawdzenie czy zrobilismy 5 lekcji
@@ -111,7 +110,7 @@ def main(user, password, database_name):
                 u"WordPLN", u"==", PL).stream()
                 for doc in check_Doc:
                     eng_odp = doc.get('WordENG')
-                    print(PL, "=>", eng_odp)
+                    # print(PL, "=>", eng_odp)
                     flag = True
             except NoSuchElementException:
                 driver.get("https://lingos.pl/students/learning/")
@@ -121,8 +120,6 @@ def main(user, password, database_name):
             
             #jezeli pobralismy angielskie slowko program moze przystapic do dzialania
             if flag == True:
-                sleep(1)
-
                 try:
                     #znajdujemy element gdzie trzeba wpisac odpowiedz
                     driver.find_element(
@@ -135,11 +132,12 @@ def main(user, password, database_name):
                         By.CSS_SELECTOR, 'strong').text
                     #jezeli podane przez nas haslo jest zle a lingos podal nam dobre robimy update w bazie danych
                     if eng_odp != english_words:
+                   
                         check_Doc = db.collection(database_name).where(
                             u"WordPLN", u"==", PL).stream()
                     #update bazy danych
                     for doc in check_Doc:
-                        print(doc.id)
+                        # print(doc.id)
                         city_ref = db.collection(
                             database_name).document(doc.id)
                         city_ref.update({u'WordENG': english_words})
@@ -167,13 +165,14 @@ def main(user, password, database_name):
                 except NoSuchElementException:
                     driver.get("https://lingos.pl/students/learning/")
         driver.get("https://lingos.pl/students/learning/")
-    
-    for i in range(100):
-        lesson()
+    with alive_bar(120) as bar:
+        for i in range(120):
+            lesson()
+            bar()
     driver.close()
 
 #Zawodowy angielski
-main("klosowskimikolaj159","Marycha3","Words_Zaw")
+# main("klosowskimikolaj159","Marycha3","Words_Zaw")
 
 #podstawowy angielski
 # main("mikolajklosowski112@gmail.com","Marycha3","Words_Pod") 
