@@ -5,17 +5,13 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from firebase_admin import firestore
 from firebase_admin import credentials
-from cmath import log
-from socket import dup
 import subprocess
 import sys
-from time import sleep
 #funckja do instalcji modulow potrzebnych do uruchomienia aplikajcji
 
 
 def install(package):
-    subprocess.check_call([sys.executable, "-m", "pip",
-                          "-q", "-q", "install", package])
+    subprocess.check_call([sys.executable, "-m", "pip","-q", "-q", "install", package])
 
 
 #sprawdzamy czy moduly zostaly wczesniej zainstalowane
@@ -56,8 +52,8 @@ default_app = firebase_admin.initialize_app(credential)
 
 next = False
 english_words = ""
-
 def main(user, password, database_name):
+   
     db = firestore.client()
     documents = db.collection(database_name).stream()
     counter = 0
@@ -85,7 +81,7 @@ def main(user, password, database_name):
 
     #funkcja glowna ktora robi lekcje
     def lesson():
-      
+        PL=""
         flag = False
         driver.get("https://lingos.pl/students/learning/")
         #sprawdzenie czy zrobilismy 5 lekcji
@@ -104,13 +100,13 @@ def main(user, password, database_name):
         except NoSuchElementException:
             #szukamy polskiego słowka
             try:
-                PL = driver.find_element(By.CSS_SELECTOR, 'h3.mb-0.h3').text
+                PL = driver.find_element(By.CSS_SELECTOR, 'h3.mb-3.h3').text
             #przeszukujemy baze danych gdzie wystepuje polskie slowk0 (mozna zrobic to troche inaczej)
                 check_Doc = db.collection(database_name).where(
                 u"WordPLN", u"==", PL).stream()
                 for doc in check_Doc:
                     eng_odp = doc.get('WordENG')
-                    # print(PL, "=>", eng_odp)
+                    print(PL, "=>", eng_odp)
                     flag = True
             except NoSuchElementException:
                 driver.get("https://lingos.pl/students/learning/")
@@ -169,10 +165,10 @@ def main(user, password, database_name):
         for i in range(120):
             lesson()
             bar()
-    driver.close()
+    # driver.close()
 
 #Zawodowy angielski
 # main("klosowskimikolaj159","Marycha3","Words_Zaw")
 
 #podstawowy angielski
-# main("mikolajklosowski112@gmail.com","Marycha3","Words_Pod") 
+main("mikolajklosowski112@gmail.com","Marycha3","Words_Pod") 
