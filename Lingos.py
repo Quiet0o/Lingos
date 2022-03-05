@@ -1,21 +1,20 @@
-from selenium.common.exceptions import NoSuchElementException
-from webdriver_manager.chrome import ChromeDriverManager
-from alive_progress import alive_bar
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from firebase_admin import firestore
-from firebase_admin import credentials
 import subprocess
 import sys
+
 #funckja do instalcji modulow potrzebnych do uruchomienia aplikajcji
-
-
 def install(package):
     subprocess.check_call([sys.executable, "-m", "pip","-q", "-q", "install", package])
 
-
 #sprawdzamy czy moduly zostaly wczesniej zainstalowane
 try:
+    from selenium.common.exceptions import NoSuchElementException
+    from webdriver_manager.chrome import ChromeDriverManager
+    from alive_progress import alive_bar
+    from selenium import webdriver
+    from selenium.webdriver.common.by import By
+    from firebase_admin import firestore
+    from firebase_admin import credentials
+  
     from selenium import webdriver
     from alive_progress import alive_bar
     import firebase_admin
@@ -28,6 +27,7 @@ except ModuleNotFoundError:
 
     print("Installating modules")
     #instalowanie pakietow
+
     install("selenium")
     install("firebase-admin")
     install("alive-progress")
@@ -46,12 +46,13 @@ credential = credentials.Certificate({
     "token_uri": "https://oauth2.googleapis.com/token",
     "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
     "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-uanzs%40lingos-c1978.iam.gserviceaccount.com"
-}
-)
+})
+
 default_app = firebase_admin.initialize_app(credential)
 
 next = False
 english_words = ""
+
 def main(user, password, database_name):
    
     db = firestore.client()
@@ -118,30 +119,42 @@ def main(user, password, database_name):
             if flag == True:
                 try:
                     #znajdujemy element gdzie trzeba wpisac odpowiedz
+
                     driver.find_element(
                         By.CSS_SELECTOR, 'input#answer').send_keys(eng_odp)
+
                     #klikamy w element ktory sprawdza nasza odpowiedz
+
                     driver.find_element(
                         By.CSS_SELECTOR, "button.btn.btn-primary.w-100").click()
+
                     #jezeli podane slowko jest zle robimy to 
+
                     english_words = driver.find_element(
                         By.CSS_SELECTOR, 'strong').text
+
                     #jezeli podane przez nas haslo jest zle a lingos podal nam dobre robimy update w bazie danych
+
                     if eng_odp != english_words:
                    
                         check_Doc = db.collection(database_name).where(
                             u"WordPLN", u"==", PL).stream()
                     #update bazy danych
+                    
                     for doc in check_Doc:
-                        # print(doc.id)
+                    
                         city_ref = db.collection(
                             database_name).document(doc.id)
+
                         city_ref.update({u'WordENG': english_words})
+
                         flag = True
 
                 except NoSuchElementException:
+
                     driver.find_element(
                         By.CSS_SELECTOR, "button.btn.btn-primary.w-100").click()
+
                 flag = False
 
             else:
@@ -160,15 +173,20 @@ def main(user, password, database_name):
 
                 except NoSuchElementException:
                     driver.get("https://lingos.pl/students/learning/")
+
         driver.get("https://lingos.pl/students/learning/")
-    with alive_bar(120) as bar:
-        for i in range(120):
+
+    with alive_bar(150) as bar:
+        for i in range(150):
             lesson()
             bar()
-    # driver.close()
+
+    driver.quit()
+    quit()
+
 
 #Zawodowy angielski
-# main("klosowskimikolaj159","Marycha3","Words_Zaw")
+main("klosowskimikolaj159","Marycha3","Words_Zaw")
 
 #podstawowy angielski
 main("mikolajklosowski112@gmail.com","Marycha3","Words_Pod") 
