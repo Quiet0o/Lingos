@@ -14,7 +14,7 @@ try:
     from selenium.webdriver.common.by import By
     from firebase_admin import firestore
     from firebase_admin import credentials
-  
+
     from selenium import webdriver
     from alive_progress import alive_bar
     import firebase_admin
@@ -54,7 +54,7 @@ next = False
 english_words = ""
 
 def main(user, password, database_name):
-   
+
     db = firestore.client()
     documents = db.collection(database_name).stream()
     counter = 0
@@ -88,13 +88,13 @@ def main(user, password, database_name):
         #sprawdzenie czy zrobilismy 5 lekcji
         try:
             driver.find_element(
-                By.CSS_SELECTOR, "a.btn.rounded-circle.btn-outline-green.disabled")
+                By.CSS_SELECTOR, "a.btn.btn-primary.disabled.py-2.px-4.mb-4")
             print("masz zrobione 5 lekcji")
             next = True
             print(next)
             driver.quit()
             quit()
-           
+
 
         #jezeli nie odpalamy bota ktory zapisuje slowka ddo bazy danych
 
@@ -111,10 +111,10 @@ def main(user, password, database_name):
                     flag = True
             except NoSuchElementException:
                 driver.get("https://lingos.pl/students/learning/")
-     
+
 
             #pobieramy angieslkie slowko
-            
+
             #jezeli pobralismy angielskie slowko program moze przystapic do dzialania
             if flag == True:
                 try:
@@ -128,7 +128,7 @@ def main(user, password, database_name):
                     driver.find_element(
                         By.CSS_SELECTOR, "button.btn.btn-primary.w-100").click()
 
-                    #jezeli podane slowko jest zle robimy to 
+                    #jezeli podane slowko jest zle robimy to
 
                     english_words = driver.find_element(
                         By.CSS_SELECTOR, 'strong').text
@@ -136,13 +136,13 @@ def main(user, password, database_name):
                     #jezeli podane przez nas haslo jest zle a lingos podal nam dobre robimy update w bazie danych
 
                     if eng_odp != english_words:
-                   
+
                         check_Doc = db.collection(database_name).where(
                             u"WordPLN", u"==", PL).stream()
                     #update bazy danych
-                    
+
                     for doc in check_Doc:
-                    
+
                         city_ref = db.collection(
                             database_name).document(doc.id)
 
@@ -185,8 +185,6 @@ def main(user, password, database_name):
     quit()
 
 
-#Zawodowy angielski
-main("klosowskimikolaj159","Marycha3","Words_Zaw")
-
 #podstawowy angielski
-main("mikolajklosowski112@gmail.com","Marycha3","Words_Pod") 
+# main("mikolajklosowski112@gmail.com","Marycha3","Words_pod_v2")
+main("pawikub42@gmail.com","angielski1","Words_pod_v2")
